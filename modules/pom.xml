@@ -11,6 +11,6 @@
 	<name>liferay-blog-statistics Modules</name>
 	<packaging>pom</packaging>
   <modules>
-    <module>blog-statistics-service</module>
+	<module>blog-statistics-service</module>
   </modules>
 </project>

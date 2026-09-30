@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN"
+		"http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder
+		dependency-injector="ds"
+		mvcc-enabled="true"
+		package-path="com.example.blogstatistics"
+		short-no-such-exception-enabled="true"
+>
+	<namespace>BlogStats</namespace>
+
+	<entity
+			local-service="true"
+			name="BlogStatistics"
+			remote-service="false"
+	>
+		<!-- Primary key -->
+
+		<column
+				name="blogStatisticsId"
+				primary="true"
+				type="long"
+		/>
+
+		<!-- Liferay scope -->
+
+		<column
+				name="companyId"
+				type="long"
+		/>
+
+		<!-- Blog entry reference -->
+
+		<column
+				name="blogEntryId"
+				type="long"
+		/>
+
+		<!-- Statistics -->
+
+		<column
+				name="viewCount"
+				type="long"
+		/>
+
+		<!-- Audit fields -->
+
+		<column
+				name="createDate"
+				type="Date"
+		/>
+
+		<column
+				name="modifiedDate"
+				type="Date"
+		/>
+
+		<finder name="EntryId" return-type="BlogStatistics">
+			<finder-column name="blogEntryId" />
+		</finder>
+
+		<finder
+				name="CompanyIdBlogEntryId"
+				return-type="BlogStatistics"
+				unique="true"
+		>
+			<finder-column name="companyId" />
+			<finder-column name="blogEntryId" />
+		</finder>
+
+
+		<finder
+				name="CompanyId"
+				return-type="Collection"
+		>
+			<finder-column name="companyId" />
+		</finder>
+
+		<finder name="ViewCountGreater" return-type="Collection">
+			<finder-column name="viewCount" comparator=">" />
+		</finder>
+
+	</entity>
+</service-builder>

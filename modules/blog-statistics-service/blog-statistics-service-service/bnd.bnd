@@ -1,0 +1,6 @@
+Bundle-Name: blog-statistics-service-service
+Bundle-SymbolicName: com.example.blogstatistics.service
+Bundle-Version: 1.0.0
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true
+-dsannotations-options: inherit
