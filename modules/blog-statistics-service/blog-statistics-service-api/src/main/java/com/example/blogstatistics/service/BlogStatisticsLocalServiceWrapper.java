@@ -321,10 +321,10 @@ public class BlogStatisticsLocalServiceWrapper
 
 	@Override
 	public com.example.blogstatistics.dto.Page getPagedStats(
-		com.example.blogstatistics.dto.Filter filter, int page, int pageSize) {
+		com.example.blogstatistics.dto.Filter filter,
+		com.example.blogstatistics.dto.PageRequest pageRequest) {
 
-		return _blogStatisticsLocalService.getPagedStats(
-			filter, page, pageSize);
+		return _blogStatisticsLocalService.getPagedStats(filter, pageRequest);
 	}
 
 	/**

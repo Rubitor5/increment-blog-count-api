@@ -1,9 +1,14 @@
 package com.example.blog.statistics.rest.service.impl;
 
 import com.example.blog.statistics.rest.dto.BlogStatisticsDTO;
+import com.example.blog.statistics.rest.dto.GetAllViewCountsQuery;
 import com.example.blog.statistics.rest.dto.PagedResponseDTO;
 import com.example.blogstatistics.dto.Filter;
 import com.example.blogstatistics.dto.Page;
+import com.example.blogstatistics.dto.PageRequest;
+import com.example.blogstatistics.dto.SortAttribute;
+import com.example.blogstatistics.dto.SortDirection;
+import com.example.blogstatistics.exception.InvalidSortException;
 import com.example.blogstatistics.model.BlogStatistics;
 import com.example.blogstatistics.service.BlogStatisticsLocalService;
 
@@ -45,16 +50,73 @@ public class BlogStatisticsResourceServiceImplTest {
     // =========================================================================
 
     @Test
-    public void getPagedStats_WithExplicitCompanyId_UsesPassedCompanyId() {
+    public void getAllViewCountsQuery_WhenPaginationIsUnset_UsesDefaults() {
+        GetAllViewCountsQuery query = new GetAllViewCountsQuery();
+
+        Assert.assertEquals(1, query.getPage());
+        Assert.assertEquals(20, query.getPageSize());
+    }
+
+    @Test
+    public void getPagedStats_WithNoSortParameters_PassesPageRequest() {
         Page pageResult = createMockPage();
-        when(blogStatisticsLocalService.getPagedStats(any(), eq(1), eq(20)))
+        when(blogStatisticsLocalService.getPagedStats(
+                any(), eq(new PageRequest(1, 20, null, null))))
                 .thenReturn(pageResult);
 
-        PagedResponseDTO result = resourceService.getPagedStats(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, 10L, 500L, 1, 20);
+        PagedResponseDTO result = resourceService.getPagedStats(
+                createQuery(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null,
+                        1, 20, null, null));
+
+        Assert.assertNotNull(result);
+        verify(blogStatisticsLocalService).getPagedStats(
+                new Filter(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null),
+                new PageRequest(1, 20, null, null));
+    }
+
+    @Test
+    public void getPagedStats_WithBothSortParameters_PassesEnums() {
+        Page pageResult = createMockPage();
+        when(blogStatisticsLocalService.getPagedStats(
+                any(), eq(new PageRequest(
+                        1, 20, SortAttribute.VIEW_COUNT,
+                        SortDirection.ASC)))).thenReturn(pageResult);
+
+        PagedResponseDTO result = resourceService.getPagedStats(
+                createQuery(
+                        EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null, 1, 20,
+                        SortAttribute.VIEW_COUNT, SortDirection.ASC));
+
+        Assert.assertNotNull(result);
+        verify(blogStatisticsLocalService).getPagedStats(
+                new Filter(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null),
+                new PageRequest(
+                        1, 20, SortAttribute.VIEW_COUNT, SortDirection.ASC));
+    }
+
+    @Test(expected = InvalidSortException.class)
+    public void getPagedStats_WithOnlyOneSortParameter_ThrowsCustomException() {
+        resourceService.getPagedStats(
+                createQuery(
+                        EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null, 1, 20,
+                        SortAttribute.VIEW_COUNT, null));
+    }
+
+    @Test
+    public void getPagedStats_WithNoSortAndExplicitCompanyId_UsesPassedCompanyId() {
+        Page pageResult = createMockPage();
+        when(blogStatisticsLocalService.getPagedStats(
+                any(), eq(new PageRequest(1, 20, null, null))))
+                .thenReturn(pageResult);
+
+        PagedResponseDTO result = resourceService.getPagedStats(
+                createQuery(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, 10L, 500L,
+                        1, 20, null, null));
 
         Assert.assertNotNull(result);
         Filter expectedFilter = new Filter(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, 10L, 500L);
-        verify(blogStatisticsLocalService).getPagedStats(expectedFilter, 1, 20);
+        verify(blogStatisticsLocalService).getPagedStats(
+                expectedFilter, new PageRequest(1, 20, null, null));
     }
 
     @Test
@@ -63,14 +125,18 @@ public class BlogStatisticsResourceServiceImplTest {
             mockedCompanyThreadLocal.when(CompanyThreadLocal::getCompanyId).thenReturn(DEFAULT_COMPANY_ID);
 
             Page pageResult = createMockPage();
-            when(blogStatisticsLocalService.getPagedStats(any(), eq(1), eq(20)))
+            when(blogStatisticsLocalService.getPagedStats(
+                    any(), eq(new PageRequest(1, 20, null, null))))
                     .thenReturn(pageResult);
 
-            PagedResponseDTO result = resourceService.getPagedStats(null, BLOG_ENTRY_ID, 10L, 500L, 1, 20);
+            PagedResponseDTO result = resourceService.getPagedStats(
+                    createQuery(null, BLOG_ENTRY_ID, 10L, 500L,
+                            1, 20, null, null));
 
             Assert.assertNotNull(result);
             Filter expectedFilter = new Filter(DEFAULT_COMPANY_ID, BLOG_ENTRY_ID, 10L, 500L);
-            verify(blogStatisticsLocalService).getPagedStats(expectedFilter, 1, 20);
+            verify(blogStatisticsLocalService).getPagedStats(
+                    expectedFilter, new PageRequest(1, 20, null, null));
         }
     }
 
@@ -80,14 +146,17 @@ public class BlogStatisticsResourceServiceImplTest {
             mockedCompanyThreadLocal.when(CompanyThreadLocal::getCompanyId).thenReturn(DEFAULT_COMPANY_ID);
 
             Page pageResult = createMockPage();
-            when(blogStatisticsLocalService.getPagedStats(any(), eq(2), eq(50)))
+            when(blogStatisticsLocalService.getPagedStats(
+                    any(), eq(new PageRequest(2, 50, null, null))))
                     .thenReturn(pageResult);
 
-            PagedResponseDTO result = resourceService.getPagedStats(null, null, null, null, 2, 50);
+            PagedResponseDTO result = resourceService.getPagedStats(
+                    createQuery(null, null, null, null, 2, 50, null, null));
 
             Assert.assertNotNull(result);
             Filter expectedFilter = new Filter(DEFAULT_COMPANY_ID, null, null, null);
-            verify(blogStatisticsLocalService).getPagedStats(expectedFilter, 2, 50);
+            verify(blogStatisticsLocalService).getPagedStats(
+                    expectedFilter, new PageRequest(2, 50, null, null));
         }
     }
 
@@ -104,14 +173,38 @@ public class BlogStatisticsResourceServiceImplTest {
             when(pageResult.pageSize()).thenReturn(10);
             when(pageResult.totalCount()).thenReturn(1L);
 
-            when(blogStatisticsLocalService.getPagedStats(any(), eq(1), eq(10)))
+            when(blogStatisticsLocalService.getPagedStats(
+                    any(), eq(new PageRequest(1, 10, null, null))))
                     .thenReturn(pageResult);
 
-            PagedResponseDTO result = resourceService.getPagedStats(null, BLOG_ENTRY_ID, null, null, 1, 10);
+            PagedResponseDTO result = resourceService.getPagedStats(
+                    createQuery(null, BLOG_ENTRY_ID, null, null, 1, 10,
+                            null, null));
 
             Assert.assertNotNull(result);
-            verify(blogStatisticsLocalService).getPagedStats(any(), eq(1), eq(10));
+            verify(blogStatisticsLocalService).getPagedStats(
+                    any(), eq(new PageRequest(1, 10, null, null)));
         }
+    }
+
+    @Test
+    public void getPagedStats_WithSort_PassesSortToLocalService() {
+        Page pageResult = createMockPage();
+        when(blogStatisticsLocalService.getPagedStats(
+                any(), eq(new PageRequest(
+                        1, 20, SortAttribute.VIEW_COUNT,
+                        SortDirection.ASC)))).thenReturn(pageResult);
+
+        PagedResponseDTO result = resourceService.getPagedStats(
+                createQuery(
+                        EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null, 1, 20,
+                        SortAttribute.VIEW_COUNT, SortDirection.ASC));
+
+        Assert.assertNotNull(result);
+        verify(blogStatisticsLocalService).getPagedStats(
+                new Filter(EXPLICIT_COMPANY_ID, BLOG_ENTRY_ID, null, null),
+                new PageRequest(
+                        1, 20, SortAttribute.VIEW_COUNT, SortDirection.ASC));
     }
 
     // =========================================================================
@@ -251,6 +344,24 @@ public class BlogStatisticsResourceServiceImplTest {
         when(stat.getViewCount()).thenReturn(viewCount);
         when(stat.getCompanyId()).thenReturn(DEFAULT_COMPANY_ID);
         return stat;
+    }
+
+    private GetAllViewCountsQuery createQuery(
+            Long companyId, Long blogEntryId, Long minViews, Long maxViews,
+            int page, int pageSize, SortAttribute sortAttribute,
+            SortDirection sortDirection) {
+
+        GetAllViewCountsQuery query = new GetAllViewCountsQuery();
+        query.setCompanyId(companyId);
+        query.setBlogEntryId(blogEntryId);
+        query.setMinViews(minViews);
+        query.setMaxViews(maxViews);
+        query.setPage(page);
+        query.setPageSize(pageSize);
+        query.setSortAttribute(sortAttribute);
+        query.setSortDirection(sortDirection);
+
+        return query;
     }
 
     private Page createMockPage() {

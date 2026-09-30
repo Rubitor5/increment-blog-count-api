@@ -7,6 +7,7 @@ package com.example.blogstatistics.service;
 
 import com.example.blogstatistics.dto.Filter;
 import com.example.blogstatistics.dto.Page;
+import com.example.blogstatistics.dto.PageRequest;
 import com.example.blogstatistics.model.BlogStatistics;
 
 import com.liferay.petra.sql.dsl.query.DSLQuery;
@@ -253,7 +254,7 @@ public interface BlogStatisticsLocalService
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Page getPagedStats(Filter filter, int page, int pageSize);
+	public Page getPagedStats(Filter filter, PageRequest pageRequest);
 
 	/**
 	 * @throws PortalException

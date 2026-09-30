@@ -2,8 +2,10 @@ package com.example.blog.statistics.rest.application;
 
 
 import com.example.blog.statistics.rest.dto.BlogStatisticsDTO;
+import com.example.blog.statistics.rest.dto.GetAllViewCountsQuery;
 import com.example.blog.statistics.rest.dto.PagedResponseDTO;
 import com.example.blog.statistics.rest.service.BlogStatisticsResourceService;
+import com.example.blogstatistics.exception.InvalidSortException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
@@ -37,23 +39,24 @@ public class BlogStatisticsRestApplication extends Application {
 	}
 
 	/**
-	 * 1. Obtain a list with all the view counts (Supports pagination & filtering)
+	 * 1. Obtain view counts with pagination, filtering, and optional sorting.
+	 * Sorting defaults to viewCount descending.
 	 * GET /o/blog-statistics/
 	 */
 	@GET
 	@Path("/")
 	public Response getAllViewCounts(
-			@QueryParam("companyId") Long companyId,
-			@QueryParam("blogEntryId") Long blogEntryId,
-			@QueryParam("minViews") Long minViews,
-			@QueryParam("maxViews") Long maxViews,
-			@QueryParam("page") @DefaultValue("1") int page,
-			@QueryParam("pageSize") @DefaultValue("20") int pageSize) {
+			@BeanParam GetAllViewCountsQuery query) {
 
-		PagedResponseDTO response = resourceService.getPagedStats(
-				companyId, blogEntryId, minViews, maxViews, page, pageSize);
+		try {
+			PagedResponseDTO response = resourceService.getPagedStats(
+				query);
 
-		return Response.ok(response).build();
+			return Response.ok(response).build();
+		}
+		catch (InvalidSortException exception) {
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
 	}
 
 	/**

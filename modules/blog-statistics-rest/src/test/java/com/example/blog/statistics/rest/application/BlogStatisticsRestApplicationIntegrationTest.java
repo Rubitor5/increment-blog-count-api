@@ -7,9 +7,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertTrue;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BlogStatisticsRestApplicationIntegrationTest {
@@ -17,6 +20,8 @@ public class BlogStatisticsRestApplicationIntegrationTest {
     private static final String BASE_URI = "http://localhost:8080";
     private static final String BASE_PATH = "/o/blog-statistics";
     private static final long TEST_BLOG_ENTRY_ID = 99001L;
+    private static final long SORTED_BLOG_ENTRY_ID = 99002L;
+    private static final long OTHER_SORTED_BLOG_ENTRY_ID = 99003L;
     private static final long NON_EXISTENT_BLOG_ENTRY_ID = 999999999L;
 
     @BeforeClass
@@ -95,6 +100,51 @@ public class BlogStatisticsRestApplicationIntegrationTest {
                 .body("items", notNullValue());
     }
 
+    @Test
+    public void test04a_GetAllViewCounts_WithSort_ReturnsSortedItems() {
+        Long companyId = incrementAndGetCompanyId(SORTED_BLOG_ENTRY_ID);
+        incrementViewCount(SORTED_BLOG_ENTRY_ID);
+        incrementViewCount(SORTED_BLOG_ENTRY_ID);
+        incrementViewCount(OTHER_SORTED_BLOG_ENTRY_ID);
+
+        List<Integer> defaultOrder = getViewCounts(companyId, null, null);
+        assertViewCountsAreOrdered(defaultOrder, false);
+
+        List<Integer> descendingOrder = getViewCounts(
+                companyId, "VIEW_COUNT", "DESC");
+        assertViewCountsAreOrdered(descendingOrder, false);
+
+        List<Integer> ascendingOrder = getViewCounts(
+                companyId, "VIEW_COUNT", "ASC");
+        assertViewCountsAreOrdered(ascendingOrder, true);
+    }
+
+    @Test
+    public void test04b_GetAllViewCounts_WithInvalidSort_Returns400() {
+        RestAssured.given()
+                .queryParam("sortAttribute", "unknownField")
+                .queryParam("sortDirection", "DESC")
+                .when()
+                .get("/")
+                .then()
+                .statusCode(400);
+
+        RestAssured.given()
+                .queryParam("sortAttribute", "VIEW_COUNT")
+                .when()
+                .get("/")
+                .then()
+                .statusCode(400);
+
+        RestAssured.given()
+                .queryParam("sortAttribute", "VIEW_COUNT")
+                .queryParam("sortDirection", "SIDEWAYS")
+                .when()
+                .get("/")
+                .then()
+                .statusCode(400);
+    }
+
     // =========================================================================
     // 4. DELETE /{blogEntryId}
     // =========================================================================
@@ -130,5 +180,68 @@ public class BlogStatisticsRestApplicationIntegrationTest {
                 .delete("/")
                 .then()
                 .statusCode(204);
+    }
+
+    private static void assertViewCountsAreOrdered(
+            List<Integer> viewCounts, boolean ascending) {
+
+        assertTrue("Expected at least two rows to verify ordering", viewCounts.size() >= 2);
+
+        for (int index = 1; index < viewCounts.size(); index++) {
+            if (ascending) {
+                assertTrue(
+                        viewCounts.get(index - 1) <= viewCounts.get(index));
+            } else {
+                assertTrue(
+                        viewCounts.get(index - 1) >= viewCounts.get(index));
+            }
+        }
+    }
+
+    private static List<Integer> getViewCounts(
+            Long companyId, String sortAttribute, String sortDirection) {
+
+        var request = RestAssured.given()
+                .accept(ContentType.JSON)
+                .queryParam("companyId", companyId)
+                .queryParam("pageSize", 100);
+
+        if (sortAttribute != null) {
+            request.queryParam("sortAttribute", sortAttribute);
+            request.queryParam("sortDirection", sortDirection);
+        }
+
+        return request.when()
+                .get("/")
+                .then()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getList("items.viewCount", Integer.class);
+    }
+
+    private static Long incrementAndGetCompanyId(long blogEntryId) {
+        return RestAssured.given()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .pathParam("blogEntryId", blogEntryId)
+                .when()
+                .post("/{blogEntryId}/increment")
+                .then()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("companyId");
+    }
+
+    private static void incrementViewCount(long blogEntryId) {
+        RestAssured.given()
+                .accept(ContentType.JSON)
+                .contentType(ContentType.JSON)
+                .pathParam("blogEntryId", blogEntryId)
+                .when()
+                .post("/{blogEntryId}/increment")
+                .then()
+                .statusCode(200);
     }
 }

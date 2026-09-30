@@ -1,10 +1,14 @@
 package com.example.blog.statistics.rest.service.impl;
 
 import com.example.blog.statistics.rest.dto.BlogStatisticsDTO;
+import com.example.blog.statistics.rest.dto.GetAllViewCountsQuery;
 import com.example.blog.statistics.rest.dto.PagedResponseDTO;
 import com.example.blog.statistics.rest.service.BlogStatisticsResourceService;
 import com.example.blogstatistics.dto.Filter;
 import com.example.blogstatistics.dto.Page;
+import com.example.blogstatistics.dto.PageRequest;
+import com.example.blogstatistics.dto.SortAttribute;
+import com.example.blogstatistics.dto.SortDirection;
 import com.example.blogstatistics.model.BlogStatistics;
 
 import com.example.blogstatistics.service.BlogStatisticsLocalService;
@@ -21,11 +25,18 @@ public class BlogStatisticsResourceServiceImpl implements BlogStatisticsResource
     private BlogStatisticsLocalService _blogStatisticsLocalService;
 
     @Override
-    public PagedResponseDTO getPagedStats(Long companyId, Long blogEntryId, Long minViews, Long maxViews, int page, int pageSize) {
-        long resolvedCompanyId = resolveCompanyId(companyId);
-        Filter filter = new Filter(resolvedCompanyId, blogEntryId, minViews, maxViews);
+    public PagedResponseDTO getPagedStats(GetAllViewCountsQuery query) {
 
-        Page pageResult = _blogStatisticsLocalService.getPagedStats(filter, page, pageSize);
+        long resolvedCompanyId = resolveCompanyId(query.getCompanyId());
+        Filter filter = new Filter(
+                resolvedCompanyId, query.getBlogEntryId(), query.getMinViews(),
+                query.getMaxViews());
+        PageRequest pageRequest = new PageRequest(
+                query.getPage(), query.getPageSize(), query.getSortAttribute(),
+                query.getSortDirection());
+
+        Page pageResult = _blogStatisticsLocalService.getPagedStats(
+                filter, pageRequest);
         return PagedResponseDTO.from(pageResult);
     }
 
