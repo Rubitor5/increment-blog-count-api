@@ -158,4 +158,3 @@ public class BlogStatisticsCacheModel
 	public long modifiedDate;
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:483396254

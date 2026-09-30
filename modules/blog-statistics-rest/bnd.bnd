@@ -1,0 +1,4 @@
+Bundle-Name: blog-statistics-rest
+Bundle-SymbolicName: com.example.blog.statistics.rest
+Bundle-Version: 1.0.0
+Liferay-Configuration-Path: /configuration

@@ -54,7 +54,7 @@ public class BlogStatisticsModelArgumentsResolver implements ArgumentsResolver {
 		long columnBitmask = blogStatisticsModelImpl.getColumnBitmask();
 
 		if (!checkColumn || (columnBitmask == 0)) {
-			return _getValue(blogStatisticsModelImpl, finderPath, original);
+			return _getValue(blogStatisticsModelImpl, columnNames, original);
 		}
 
 		Long finderPathColumnBitmask = _finderPathColumnBitmasksCache.get(
@@ -73,7 +73,7 @@ public class BlogStatisticsModelArgumentsResolver implements ArgumentsResolver {
 		}
 
 		if ((columnBitmask & finderPathColumnBitmask) != 0) {
-			return _getValue(blogStatisticsModelImpl, finderPath, original);
+			return _getValue(blogStatisticsModelImpl, columnNames, original);
 		}
 
 		return null;
@@ -90,27 +90,22 @@ public class BlogStatisticsModelArgumentsResolver implements ArgumentsResolver {
 	}
 
 	private static Object[] _getValue(
-		BlogStatisticsModelImpl blogStatisticsModelImpl, FinderPath finderPath,
+		BlogStatisticsModelImpl blogStatisticsModelImpl, String[] columnNames,
 		boolean original) {
-
-		String[] columnNames = finderPath.getColumnNames();
 
 		Object[] arguments = new Object[columnNames.length];
 
 		for (int i = 0; i < arguments.length; i++) {
 			String columnName = columnNames[i];
 
-			Object value;
-
 			if (original) {
-				value = blogStatisticsModelImpl.getColumnOriginalValue(
+				arguments[i] = blogStatisticsModelImpl.getColumnOriginalValue(
 					columnName);
 			}
 			else {
-				value = blogStatisticsModelImpl.getColumnValue(columnName);
+				arguments[i] = blogStatisticsModelImpl.getColumnValue(
+					columnName);
 			}
-
-			arguments[i] = finderPath.normalizeArgument(i, value);
 		}
 
 		return arguments;
@@ -120,4 +115,3 @@ public class BlogStatisticsModelArgumentsResolver implements ArgumentsResolver {
 		new ConcurrentHashMap<>();
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:1881995573

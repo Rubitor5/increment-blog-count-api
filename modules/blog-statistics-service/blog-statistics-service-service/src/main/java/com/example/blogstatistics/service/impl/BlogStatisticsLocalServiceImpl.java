@@ -74,6 +74,11 @@ public class BlogStatisticsLocalServiceImpl
 	}
 
 	@Transactional
+	public void deleteAllStats() {
+		blogStatisticsPersistence.removeAll();
+	}
+
+	@Transactional
 	public BlogStatistics deleteByCompanyIdAndBlogEntryId(long companyId, long blogEntryId) throws PortalException {
 		BlogStatistics stat = blogStatisticsPersistence.fetchByCompanyIdBlogEntryId(companyId, blogEntryId);
 		if (stat == null) {
@@ -90,20 +95,20 @@ public class BlogStatisticsLocalServiceImpl
 			return dynamicQuery;
 		}
 
-		if (filter.getCompanyId() != null && filter.getCompanyId() > 0) {
-			dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(filter.getCompanyId()));
+		if (filter.companyId() != null && filter.companyId() > 0) {
+			dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(filter.companyId()));
 		}
 
-		if (filter.getBlogEntryId() != null && filter.getBlogEntryId() > 0) {
-			dynamicQuery.add(PropertyFactoryUtil.forName("blogEntryId").eq(filter.getBlogEntryId()));
+		if (filter.blogEntryId() != null && filter.blogEntryId() > 0) {
+			dynamicQuery.add(PropertyFactoryUtil.forName("blogEntryId").eq(filter.blogEntryId()));
 		}
 
-		if (filter.getMinViews() != null && filter.getMinViews() >= 0) {
-			dynamicQuery.add(PropertyFactoryUtil.forName("viewCount").ge(filter.getMinViews()));
+		if (filter.minViews() != null && filter.minViews() >= 0) {
+			dynamicQuery.add(PropertyFactoryUtil.forName("viewCount").ge(filter.minViews()));
 		}
 
-		if (filter.getMaxViews() != null && filter.getMaxViews() >= 0) {
-			dynamicQuery.add(PropertyFactoryUtil.forName("viewCount").le(filter.getMaxViews()));
+		if (filter.maxViews() != null && filter.maxViews() >= 0) {
+			dynamicQuery.add(PropertyFactoryUtil.forName("viewCount").le(filter.maxViews()));
 		}
 
 		return dynamicQuery;

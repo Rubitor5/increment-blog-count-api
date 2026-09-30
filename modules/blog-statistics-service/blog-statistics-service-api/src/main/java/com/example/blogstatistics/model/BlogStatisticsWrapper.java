@@ -270,4 +270,3 @@ public class BlogStatisticsWrapper
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-403218662

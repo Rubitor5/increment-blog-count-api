@@ -71,6 +71,11 @@ public class BlogStatisticsLocalServiceWrapper
 		return _blogStatisticsLocalService.createPersistedModel(primaryKeyObj);
 	}
 
+	@Override
+	public void deleteAllStats() {
+		_blogStatisticsLocalService.deleteAllStats();
+	}
+
 	/**
 	 * Deletes the blog statistics from the database. Also notifies the appropriate model listeners.
 	 *
@@ -378,4 +383,3 @@ public class BlogStatisticsLocalServiceWrapper
 	private BlogStatisticsLocalService _blogStatisticsLocalService;
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-2075220552

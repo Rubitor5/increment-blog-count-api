@@ -39,4 +39,3 @@ public abstract class BlogStatisticsBaseImpl
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-1558490848

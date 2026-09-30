@@ -44,6 +44,14 @@ public interface BlogStatisticsPersistence
 		throws NoSuchBlogStatisticsException;
 
 	/**
+	 * Returns the blog statistics where blogEntryId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param blogEntryId the blog entry ID
+	 * @return the matching blog statistics, or <code>null</code> if a matching blog statistics could not be found
+	 */
+	public BlogStatistics fetchByEntryId(long blogEntryId);
+
+	/**
 	 * Returns the blog statistics where blogEntryId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param blogEntryId the blog entry ID
@@ -83,6 +91,16 @@ public interface BlogStatisticsPersistence
 		throws NoSuchBlogStatisticsException;
 
 	/**
+	 * Returns the blog statistics where companyId = &#63; and blogEntryId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param companyId the company ID
+	 * @param blogEntryId the blog entry ID
+	 * @return the matching blog statistics, or <code>null</code> if a matching blog statistics could not be found
+	 */
+	public BlogStatistics fetchByCompanyIdBlogEntryId(
+		long companyId, long blogEntryId);
+
+	/**
 	 * Returns the blog statistics where companyId = &#63; and blogEntryId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param companyId the company ID
@@ -114,10 +132,51 @@ public interface BlogStatisticsPersistence
 	public int countByCompanyIdBlogEntryId(long companyId, long blogEntryId);
 
 	/**
+	 * Returns all the blog statisticses where companyId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @return the matching blog statisticses
+	 */
+	public java.util.List<BlogStatistics> findByCompanyId(long companyId);
+
+	/**
+	 * Returns a range of all the blog statisticses where companyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param start the lower bound of the range of blog statisticses
+	 * @param end the upper bound of the range of blog statisticses (not inclusive)
+	 * @return the range of matching blog statisticses
+	 */
+	public java.util.List<BlogStatistics> findByCompanyId(
+		long companyId, int start, int end);
+
+	/**
 	 * Returns an ordered range of all the blog statisticses where companyId = &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>com.example.blogstatistics.model.impl.BlogStatisticsModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param start the lower bound of the range of blog statisticses
+	 * @param end the upper bound of the range of blog statisticses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching blog statisticses
+	 */
+	public java.util.List<BlogStatistics> findByCompanyId(
+		long companyId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the blog statisticses where companyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
 	 * </p>
 	 *
 	 * @param companyId the company ID
@@ -160,6 +219,47 @@ public interface BlogStatisticsPersistence
 			orderByComparator);
 
 	/**
+	 * Returns the last blog statistics in the ordered set where companyId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching blog statistics
+	 * @throws NoSuchBlogStatisticsException if a matching blog statistics could not be found
+	 */
+	public BlogStatistics findByCompanyId_Last(
+			long companyId,
+			com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+				orderByComparator)
+		throws NoSuchBlogStatisticsException;
+
+	/**
+	 * Returns the last blog statistics in the ordered set where companyId = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching blog statistics, or <code>null</code> if a matching blog statistics could not be found
+	 */
+	public BlogStatistics fetchByCompanyId_Last(
+		long companyId,
+		com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+			orderByComparator);
+
+	/**
+	 * Returns the blog statisticses before and after the current blog statistics in the ordered set where companyId = &#63;.
+	 *
+	 * @param blogStatisticsId the primary key of the current blog statistics
+	 * @param companyId the company ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next blog statistics
+	 * @throws NoSuchBlogStatisticsException if a blog statistics with the primary key could not be found
+	 */
+	public BlogStatistics[] findByCompanyId_PrevAndNext(
+			long blogStatisticsId, long companyId,
+			com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+				orderByComparator)
+		throws NoSuchBlogStatisticsException;
+
+	/**
 	 * Removes all the blog statisticses where companyId = &#63; from the database.
 	 *
 	 * @param companyId the company ID
@@ -187,7 +287,7 @@ public interface BlogStatisticsPersistence
 	 * Returns a range of all the blog statisticses where viewCount &gt; &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>com.example.blogstatistics.model.impl.BlogStatisticsModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
 	 * </p>
 	 *
 	 * @param viewCount the view count
@@ -202,7 +302,7 @@ public interface BlogStatisticsPersistence
 	 * Returns an ordered range of all the blog statisticses where viewCount &gt; &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>com.example.blogstatistics.model.impl.BlogStatisticsModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
 	 * </p>
 	 *
 	 * @param viewCount the view count
@@ -220,7 +320,7 @@ public interface BlogStatisticsPersistence
 	 * Returns an ordered range of all the blog statisticses where viewCount &gt; &#63;.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>com.example.blogstatistics.model.impl.BlogStatisticsModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
 	 * </p>
 	 *
 	 * @param viewCount the view count
@@ -263,6 +363,47 @@ public interface BlogStatisticsPersistence
 			orderByComparator);
 
 	/**
+	 * Returns the last blog statistics in the ordered set where viewCount &gt; &#63;.
+	 *
+	 * @param viewCount the view count
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching blog statistics
+	 * @throws NoSuchBlogStatisticsException if a matching blog statistics could not be found
+	 */
+	public BlogStatistics findByViewCountGreater_Last(
+			long viewCount,
+			com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+				orderByComparator)
+		throws NoSuchBlogStatisticsException;
+
+	/**
+	 * Returns the last blog statistics in the ordered set where viewCount &gt; &#63;.
+	 *
+	 * @param viewCount the view count
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching blog statistics, or <code>null</code> if a matching blog statistics could not be found
+	 */
+	public BlogStatistics fetchByViewCountGreater_Last(
+		long viewCount,
+		com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+			orderByComparator);
+
+	/**
+	 * Returns the blog statisticses before and after the current blog statistics in the ordered set where viewCount &gt; &#63;.
+	 *
+	 * @param blogStatisticsId the primary key of the current blog statistics
+	 * @param viewCount the view count
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next blog statistics
+	 * @throws NoSuchBlogStatisticsException if a blog statistics with the primary key could not be found
+	 */
+	public BlogStatistics[] findByViewCountGreater_PrevAndNext(
+			long blogStatisticsId, long viewCount,
+			com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+				orderByComparator)
+		throws NoSuchBlogStatisticsException;
+
+	/**
 	 * Removes all the blog statisticses where viewCount &gt; &#63; from the database.
 	 *
 	 * @param viewCount the view count
@@ -276,6 +417,20 @@ public interface BlogStatisticsPersistence
 	 * @return the number of matching blog statisticses
 	 */
 	public int countByViewCountGreater(long viewCount);
+
+	/**
+	 * Caches the blog statistics in the entity cache if it is enabled.
+	 *
+	 * @param blogStatistics the blog statistics
+	 */
+	public void cacheResult(BlogStatistics blogStatistics);
+
+	/**
+	 * Caches the blog statisticses in the entity cache if it is enabled.
+	 *
+	 * @param blogStatisticses the blog statisticses
+	 */
+	public void cacheResult(java.util.List<BlogStatistics> blogStatisticses);
 
 	/**
 	 * Creates a new blog statistics with the primary key. Does not add the blog statistics to the database.
@@ -316,80 +471,71 @@ public interface BlogStatisticsPersistence
 	public BlogStatistics fetchByPrimaryKey(long blogStatisticsId);
 
 	/**
-	 * Returns the blog statistics where blogEntryId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns all the blog statisticses.
 	 *
-	 * @param blogEntryId the blog entry ID
-	 * @return the matching blog statistics, or <code>null</code> if a matching blog statistics could not be found
+	 * @return the blog statisticses
 	 */
-	public default BlogStatistics fetchByEntryId(long blogEntryId) {
-		return fetchByEntryId(blogEntryId, true);
-	}
+	public java.util.List<BlogStatistics> findAll();
 
 	/**
-	 * Returns the blog statistics where companyId = &#63; and blogEntryId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param companyId the company ID
-	 * @param blogEntryId the blog entry ID
-	 * @return the matching blog statistics, or <code>null</code> if a matching blog statistics could not be found
-	 */
-	public default BlogStatistics fetchByCompanyIdBlogEntryId(
-		long companyId, long blogEntryId) {
-
-		return fetchByCompanyIdBlogEntryId(companyId, blogEntryId, true);
-	}
-
-	/**
-	 * Returns all the blog statisticses where companyId = &#63;.
-	 *
-	 * @param companyId the company ID
-	 * @return the matching blog statisticses
-	 */
-	public default java.util.List<BlogStatistics> findByCompanyId(
-		long companyId) {
-
-		return findByCompanyId(
-			companyId, com.liferay.portal.kernel.dao.orm.QueryUtil.ALL_POS,
-			com.liferay.portal.kernel.dao.orm.QueryUtil.ALL_POS, null, true);
-	}
-
-	/**
-	 * Returns a range of all the blog statisticses where companyId = &#63;.
+	 * Returns a range of all the blog statisticses.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>com.example.blogstatistics.model.impl.BlogStatisticsModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
 	 * </p>
 	 *
-	 * @param companyId the company ID
 	 * @param start the lower bound of the range of blog statisticses
 	 * @param end the upper bound of the range of blog statisticses (not inclusive)
-	 * @return the range of matching blog statisticses
+	 * @return the range of blog statisticses
 	 */
-	public default java.util.List<BlogStatistics> findByCompanyId(
-		long companyId, int start, int end) {
-
-		return findByCompanyId(companyId, start, end, null, true);
-	}
+	public java.util.List<BlogStatistics> findAll(int start, int end);
 
 	/**
-	 * Returns an ordered range of all the blog statisticses where companyId = &#63;.
+	 * Returns an ordered range of all the blog statisticses.
 	 *
 	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>com.example.blogstatistics.model.impl.BlogStatisticsModelImpl</code>.
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
 	 * </p>
 	 *
-	 * @param companyId the company ID
 	 * @param start the lower bound of the range of blog statisticses
 	 * @param end the upper bound of the range of blog statisticses (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching blog statisticses
+	 * @return the ordered range of blog statisticses
 	 */
-	public default java.util.List<BlogStatistics> findByCompanyId(
-		long companyId, int start, int end,
+	public java.util.List<BlogStatistics> findAll(
+		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
-			orderByComparator) {
+			orderByComparator);
 
-		return findByCompanyId(companyId, start, end, orderByComparator, true);
-	}
+	/**
+	 * Returns an ordered range of all the blog statisticses.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>BlogStatisticsModelImpl</code>.
+	 * </p>
+	 *
+	 * @param start the lower bound of the range of blog statisticses
+	 * @param end the upper bound of the range of blog statisticses (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of blog statisticses
+	 */
+	public java.util.List<BlogStatistics> findAll(
+		int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<BlogStatistics>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Removes all the blog statisticses from the database.
+	 */
+	public void removeAll();
+
+	/**
+	 * Returns the number of blog statisticses.
+	 *
+	 * @return the number of blog statisticses
+	 */
+	public int countAll();
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-2088920231

@@ -83,8 +83,6 @@ public class BlogStatisticsModelImpl
 	public static final String TABLE_SQL_DROP =
 		"drop table BlogStats_BlogStatistics";
 
-	public static final String ENTITY_ALIAS = "blogStatistics";
-
 	public static final String ORDER_BY_JPQL =
 		" ORDER BY blogStatistics.blogStatisticsId ASC";
 
@@ -762,4 +760,3 @@ public class BlogStatisticsModelImpl
 	private BlogStatistics _escapedModel;
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:353304753

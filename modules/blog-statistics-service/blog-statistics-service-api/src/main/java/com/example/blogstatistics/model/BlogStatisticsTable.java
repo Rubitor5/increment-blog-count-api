@@ -45,4 +45,3 @@ public class BlogStatisticsTable extends BaseTable<BlogStatisticsTable> {
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-1716832365

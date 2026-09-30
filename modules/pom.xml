@@ -12,5 +12,6 @@
 	<packaging>pom</packaging>
   <modules>
 	<module>blog-statistics-service</module>
+    <module>blog-statistics-rest</module>
   </modules>
 </project>

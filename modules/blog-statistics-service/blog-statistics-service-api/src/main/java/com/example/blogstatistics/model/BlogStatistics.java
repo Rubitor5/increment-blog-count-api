@@ -50,4 +50,3 @@ public interface BlogStatistics extends BlogStatisticsModel, PersistedModel {
 		};
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:673587239

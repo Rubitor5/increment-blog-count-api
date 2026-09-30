@@ -84,6 +84,9 @@ public interface BlogStatisticsLocalService
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	@Transactional
+	public void deleteAllStats();
+
 	/**
 	 * Deletes the blog statistics from the database. Also notifies the appropriate model listeners.
 	 *
@@ -277,4 +280,3 @@ public interface BlogStatisticsLocalService
 	public BlogStatistics updateBlogStatistics(BlogStatistics blogStatistics);
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:-1170455697

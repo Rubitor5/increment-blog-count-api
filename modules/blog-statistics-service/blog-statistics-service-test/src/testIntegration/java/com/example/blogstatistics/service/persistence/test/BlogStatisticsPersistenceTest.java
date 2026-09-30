@@ -112,7 +112,11 @@ public class BlogStatisticsPersistenceTest {
 
 	@Test
 	public void testUpdateExisting() throws Exception {
-		BlogStatistics newBlogStatistics = addBlogStatistics();
+		long pk = RandomTestUtil.nextLong();
+
+		BlogStatistics newBlogStatistics = _persistence.create(pk);
+
+		newBlogStatistics.setMvccVersion(RandomTestUtil.nextLong());
 
 		newBlogStatistics.setCompanyId(RandomTestUtil.nextLong());
 
@@ -124,9 +128,7 @@ public class BlogStatisticsPersistenceTest {
 
 		newBlogStatistics.setModifiedDate(RandomTestUtil.nextDate());
 
-		newBlogStatistics = _persistence.update(newBlogStatistics);
-
-		_blogStatisticses.add(newBlogStatistics);
+		_blogStatisticses.add(_persistence.update(newBlogStatistics));
 
 		BlogStatistics existingBlogStatistics = _persistence.findByPrimaryKey(
 			newBlogStatistics.getPrimaryKey());
@@ -501,6 +503,8 @@ public class BlogStatisticsPersistenceTest {
 
 		BlogStatistics blogStatistics = _persistence.create(pk);
 
+		blogStatistics.setMvccVersion(RandomTestUtil.nextLong());
+
 		blogStatistics.setCompanyId(RandomTestUtil.nextLong());
 
 		blogStatistics.setBlogEntryId(RandomTestUtil.nextLong());
@@ -522,4 +526,3 @@ public class BlogStatisticsPersistenceTest {
 	private ClassLoader _dynamicQueryClassLoader;
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:1769140466
