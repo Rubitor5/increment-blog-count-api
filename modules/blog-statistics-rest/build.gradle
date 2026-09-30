@@ -2,4 +2,19 @@ dependencies {
 	compileOnly project(":modules:blog-statistics-service:blog-statistics-service-api")
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
 	compileOnly group: "org.osgi", name: "org.osgi.service.jaxrs"
+
+	testImplementation project(":modules:blog-statistics-service:blog-statistics-service-api")
+	testImplementation group: "com.liferay.portal", name: "release.portal.api"
+	testImplementation group: "junit", name: "junit", version: "4.13.2"
+	testImplementation group: "org.mockito", name: "mockito-core", version: "4.11.0"
+	testImplementation group: "org.mockito", name: "mockito-inline", version: "4.11.0"
+	testImplementation group: "javax.ws.rs", name: "javax.ws.rs-api", version: "2.1.1"
+	testImplementation group: "io.rest-assured", name: "rest-assured", version: "5.4.0"
+	testImplementation group: "org.hamcrest", name: "hamcrest", version: "2.2"
+}
+
+tasks.named('test') {
+	jvmArgs(
+			'--add-opens=java.base/java.lang.invoke=ALL-UNNAMED'
+	)
 }

@@ -2,6 +2,12 @@ dependencies {
 	api project(":modules:blog-statistics-service:blog-statistics-service-api")
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
+	testImplementation group: "com.liferay.portal", name: "release.portal.api"
+	testImplementation group: "junit", name: "junit", version: "4.13.2"
+	testImplementation group: "org.mockito", name: "mockito-core", version: "4.11.0"
+	testImplementation group: "org.mockito", name: "mockito-inline", version: "4.11.0"
+	testImplementation group: "javax.ws.rs", name: "javax.ws.rs-api", version: "2.1.1"
 }
 
 buildService {
@@ -10,3 +16,9 @@ buildService {
 }
 
 group = "com.example.blogstatistics"
+
+tasks.named('test') {
+	jvmArgs(
+			'--add-opens=java.base/java.lang.invoke=ALL-UNNAMED'
+	)
+}
